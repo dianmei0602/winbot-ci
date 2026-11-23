@@ -1,0 +1,30 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: 语法自检（src / ui / electron / test）
+        run: node test/syntax-check.mjs
+
+      - name: Telegram 群聊判定
+        run: node test/telegram-group.mjs
+
+      - name: Slack / Discord @ 收敛
+        run: node test/channel-mention.mjs
+
+      - name: 文档一致性（无 dist 时跳过包检查）
+        run: node test/docs-check.mjs
+
+      # 需要本机 DSH 与已安装桌面版，CI 里不跑：
+      # session-cookie / update-check / team-connectors / ui-* / model 回归
