@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>winbot vs OpenMausBot · 功能对比（2026-11-22）</title>
+<style>
+  :root {
+    --bg: #0b0d12; --bg2: #12161f; --bg3: #1a2030; --line: #263041;
+    --fg: #e8edf6; --fg2: #a8b3c7; --fg3: #6f7c93;
+    --win: #6ea8fe; --omb: #d9a05b; --both: #3fbf8f; --none: #6b7688;
+    --shadow: 0 12px 40px rgba(0,0,0,.35);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: radial-gradient(1200px 600px at 20% -10%, #182234 0%, var(--bg) 55%);
+    color: var(--fg); font: 14px/1.6 -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 40px 22px 80px; }
+  header h1 { font-size: 30px; margin: 0 0 6px; letter-spacing: .2px; }
+  header .sub { color: var(--fg2); font-size: 14px; }
+  header .meta { color: var(--fg3); font-size: 12px; margin-top: 10px; }
+  .pill { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg2); font-size: 12px; color: var(--fg2); margin-right: 8px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+
+  .hero { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 26px 0 10px; }
+  .card { background: linear-gradient(180deg, var(--bg2), #0f131b); border: 1px solid var(--line); border-radius: 16px; padding: 18px; box-shadow: var(--shadow); }
+  .card h2 { margin: 0 0 6px; font-size: 16px; display: flex; align-items: center; gap: 8px; }
+  .card .tag { font-size: 11px; color: var(--fg3); border: 1px solid var(--line); padding: 1px 8px; border-radius: 999px; }
+  .card p { margin: 8px 0 0; color: var(--fg2); font-size: 13px; }
+  .score { display: flex; align-items: baseline; gap: 8px; margin-top: 12px; }
+  .score b { font-size: 26px; font-variant-numeric: tabular-nums; }
+  .score span { color: var(--fg3); font-size: 12px; }
+  .bar { height: 8px; background: var(--bg3); border-radius: 99px; overflow: hidden; margin-top: 8px; }
+  .bar i { display: block; height: 100%; border-radius: 99px; }
+
+  .controls { display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0 14px; }
+  .btn { cursor: pointer; border: 1px solid var(--line); background: var(--bg2); color: var(--fg2); padding: 7px 12px; border-radius: 10px; font-size: 13px; }
+  .btn:hover { color: var(--fg); border-color: #38455c; }
+  .btn.on { color: #0b0d12; background: var(--fg); border-color: var(--fg); font-weight: 600; }
+
+  table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
+  thead th { text-align: left; font-size: 12px; color: var(--fg3); font-weight: 600; padding: 0 12px 4px; }
+  tbody tr { background: var(--bg2); }
+  tbody tr td { padding: 12px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); vertical-align: top; }
+  tbody tr td:first-child { border-left: 1px solid var(--line); border-radius: 12px 0 0 12px; }
+  tbody tr td:last-child { border-right: 1px solid var(--line); border-radius: 0 12px 12px 0; }
+  .cat { color: var(--fg3); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 4px; }
+  .name { font-weight: 600; }
+  .cell { display: flex; gap: 8px; align-items: flex-start; }
+  .mark { flex: 0 0 18px; margin-top: 1px; font-size: 14px; }
+  .note { color: var(--fg2); font-size: 12.5px; }
+  .row-win { box-shadow: inset 3px 0 0 var(--win); }
+  .row-omb { box-shadow: inset 3px 0 0 var(--omb); }
+  .row-both { box-shadow: inset 3px 0 0 var(--both); }
+
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 22px; }
+  .list { margin: 8px 0 0; padding-left: 18px; color: var(--fg2); font-size: 13px; }
+  .list li { margin: 6px 0; }
+  .list b { color: var(--fg); }
+
+  footer { margin-top: 30px; color: var(--fg3); font-size: 12px; }
+  footer a { color: var(--fg2); }
+  @media (max-width: 860px) { .hero, .split { grid-template-columns: 1fr; } table { font-size: 13px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>winbot <span style="color:var(--fg3)">vs</span> OpenMausBot</h1>
+    <div class="sub">两份「聊天应用里的 AI 机器人团队」：winbot 0.5.0 · OpenMausBot（官方 README）</div>
+    <div class="meta">
+      <span class="pill"><i class="dot" style="background:var(--win)"></i>winbot：本机代码与实测</span>
+      <span class="pill"><i class="dot" style="background:var(--omb)"></i>OpenMausBot：README 描述，未逐项实测</span>
+      <span class="pill">采集：2026-11-22</span>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="card">
+      <h2>winbot <span class="tag">Windows 本地个人机器人</span></h2>
+      <p>一个桌面窗口里多个机器人，各自人设/模型/工作区/记忆。DSH 沙箱真隔离，越界要审批。
+         自带本机生图 / 生视频 / 3D，能接 Telegram、Slack、Discord。</p>
+      <div class="score"><b id="winScore">—</b><span>项已具备 / <span id="total">—</span> 项（本表口径）</span></div>
+      <div class="bar"><i id="winBar" style="width:0;background:var(--win)"></i></div>
+    </div>
+    <div class="card">
+      <h2>OpenMausBot <span class="tag">跨平台 Grok Bot 替代品</span></h2>
+      <p>每个 bot 是一个真 agent（claude / codex / grok CLI），自带云端电脑、500+ 应用连接、
+         团队包、定时与 webhook、语音通话，macOS/Windows/Ubuntu 都有安装包。</p>
+      <div class="score"><b id="ombScore">—</b><span>项已具备 / <span id="total2">—</span> 项（本表口径）</span></div>
+      <div class="bar"><i id="ombBar" style="width:0;background:var(--omb)"></i></div>
+    </div>
+  </section>
+
+  <div class="controls" id="controls">
+    <button class="btn on" data-f="all">全部</button>
+    <button class="btn" data-f="diff">只看差异</button>
+    <button class="btn" data-f="win">winbot 独有</button>
+    <button class="btn" data-f="omb">OpenMausBot 独有</button>
+    <button class="btn" data-f="both">两边都有</button>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th style="width:24%">能力</th><th style="width:38%">winbot</th><th style="width:38%">OpenMausBot</th></tr>
+    </thead>
+    <tbody id="rows"></tbody>
+  </table>
+
+  <section class="split">
+    <div class="card">
+      <h2>winbot 更强的地方</h2>
+      <ul class="list">
+        <li><b>本机生成</b>：Z-Image 生图、MiniMax H3 生视频（滑窗长镜头 / 首尾帧）、Hunyuan3D 生 3D——OpenMausBot 完全没有。</li>
+        <li><b>渠道接入</b>：Telegram / Slack / Discord 都能用；OpenMausBot 是「自己的 app + 手机 web」，不接第三方 IM。</li>
+        <li><b>中文与本地化</b>：界面、技能、审批全中文；对国内模型接口（DeepSeek 等）开箱可用。</li>
+        <li><b>分寸感</b>：按机器人的每日预算、免打扰、每日上限、失败暂停、送达队列——这些 OpenMausBot 的 routines 没有那么细。</li>
+        <li><b>可看生成过程</b>：右侧内嵌 ComfyUI，出图/出片时能盯着队列。</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>OpenMausBot 更强的地方</h2>
+      <ul class="list">
+        <li><b>跨平台 + 签名</b>：macOS/Windows/Ubuntu 都有安装包，macOS 签名公证；winbot 只有 Windows 且未签名。</li>
+        
+        <li><b>应用生态</b>：Composio 500+ 应用（Gmail/Slack/GitHub/Notion…）+ 应用事件触发；winbot 只有自建 MCP。</li>
+        <li><b>云电脑 / 隔离 VM</b>：每个 bot 一台云端 Linux 桌面或本地 VM；winbot 只有本机桌面（需审批）。</li>
+        <li><b>手机与远程</b>：原生 App、配对、Tailscale 打开另一台电脑的 bot；winbot 现在只有同 WiFi 的浏览器访问。</li>
+        <li><b>语音</b>：TTS（ElevenLabs/Fish/Grok/Mac 本地）、通话、听写；winbot 没有。</li>
+        <li><b>团队模板 / 分享</b>：一个 Markdown 装一整套团队；能把自己发布出去；winbot 只能一个机器人一个机器人建。</li>
+        <li><b>自动化更宽</b>：webhook + 应用事件 + 自动路由（Jev）；winbot 只有定时 + @/上一个发言。</li>
+        <li><b>对外接口</b>：自带 stdio MCP server 给 Claude Desktop/Cursor，另有 headless CLI；winbot 只有本机 HTTP API。</li>
+        <li><b>工程规格</b>：TypeScript strict、pnpm test（unit/driver/API/desktop）、SBOM；winbot 是纯 JS + 自建回归脚本。</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="card" style="margin-top:18px">
+    <h2>如果只抄三件事</h2>
+    <ul class="list">
+      <li><b>公网远程访问</b>：现在只有同一 WiFi；接 Tailscale 或反代 + HTTPS 才能在外面用。</li>
+      <li><b>手机/远程接入</b>（配对 + Tailscale）：现在只能在跑它的那台电脑上用。</li>
+      <li><b>托管的 OAuth 应用目录</b>（Composio 等价）：已有 7 个 MCP 模板，但没有「点一下就用」的 OAuth 授权与凭据托管。</li>
+    </ul>
+    <p class="note" style="color:var(--fg3);font-size:12px;margin-top:10px">语音 TTS、团队模板、webhook 是第二批；云电脑涉及付费第三方，短期不建议跟。</p>
+  </section>
+
+  <footer>
+    <div>数据来源：winbot 自身 <code>docs/FEATURES.md</code>、<code>PROGRESS.md</code> 与本机实测；
+      OpenMausBot 官方仓库 README：<a href="https://github.com/milind-soni/OpenMausBot">github.com/milind-soni/OpenMausBot</a>。</div>
+    <div>OpenMausBot 部分仅根据其 README 描述归类，没有逐项安装验证；「未提及」一律不当作「没有」以外的强断言。</div>
+  </footer>
+</div>
+
+<script>
+// 每一行：分类、能力、winbot(有/无 + 说明)、OpenMausBot(有/无 + 说明)
+// mark: ✅ 有 / 🟡 部分或有前提 / ❌ 无
+const DATA = [
+  // 平台与分发
+  ['平台', 'Windows 安装包', '✅', 'NSIS 按用户安装，249.9 MB，免管理员', '✅', 'setup.exe 一键，装到 %LOCALAPPDATA%'],
+  ['平台', 'macOS / Linux', '❌', '只做 Windows', '✅', 'dmg（签名+公证）/ deb / rpm / AppImage'],
+  ['平台', '代码签名', '❌', '未签名，SmartScreen 提示', '🟡', 'macOS 已签名公证；Windows 安装包未签名'],
+  ['平台', '自动更新', '✅', '设置/托盘查 GitHub Releases，下载并静默安装', '✅', '更新回到安装器记录的目录'],
+  ['平台', '开源与许可', '🟡', '私有仓（dianmei0602/winbot），未选协议', '✅', 'Apache-2.0（enterprise 目录另许）'],
+
+  // 运行时
+  ['运行时', 'Agent 内核', '✅', 'DSH（DeepSeek Harness）SDK over stdio，每机器人一进程', '✅', '自研 harness + claude/codex/grok CLI 驱动'],
+  ['运行时', '模型自由度', '✅', 'OpenAI 兼容 / Responses / Anthropic；每机器人独立模型', '✅', 'Claude/Codex/Grok + 自定义 ACP CLI + OpenAI 兼容端点'],
+  ['运行时', '数据位置', '✅', 'data/ 与 %APPDATA%\\winbot\\data', '✅', '~/.openmausbot，本地'],
+  ['运行时', '手机访问', '✅', '局域网已可扫码使用；没有原生 App', '✅', '手机 web / 原生 App / 配对'],
+  ['运行时', '远程 / 多机', '❌', '仅同一 WiFi；公网需 Tailscale（未做）', '✅', 'Tailscale 打开另一台电脑的 bot；VPS serve'],
+
+  // 记忆与技能
+  ['记忆', '跨机器人共享记忆', '✅', '「关于我」4000 字，敏感信息先问、密钥拒记', '🟡', '每个线程有记忆，README 未展开共享范围'],
+  ['技能', '自定义技能', '✅', 'SKILL.md 目录，粘贴或 ZIP 导入，模型自动调用', '✅', '团队包含 skills，可分享/导入'],
+  ['技能', '团队模板一键装', '✅', '一段 Markdown/JSON 建多个机器人 + 群，同名更新不重建', '✅', 'BotMRR 的 Markdown 一键建整套团队'],
+
+  // 权限与安全
+  ['权限', '分级权限', '✅', '只读 / 工作区 / 完全 三档', '✅', '云电脑、本地 VM、本机三档 + 平台安全门'],
+  ['权限', '审批粒度', '✅', '单次 + 「1 小时内同类」豁免', '✅', 'Allow / Deny / 在聊天里回答'],
+  ['权限', '沙箱隔离', '✅', 'DSH 沙箱真限制在 workspace，越界必审批', '🟡', '依赖所选电脑形态；Wayland 直接禁用本机控制'],
+  ['权限', '密钥保管', '🟡', '本地 config.json 明文（仅本机）', '✅', '桌面端用 OS 加密；CLI 模式明文 0600'],
+
+  // 电脑操作
+  ['电脑', '截屏 / 看窗口', '✅', '免审批', '🟡', '预览截图：Windows 不可用'],
+  ['电脑', '点鼠标 / 打字', '🟡', '已实现且需审批，但只验证过拦截、没真机动键鼠', '✅', 'mac/Windows/Xorg 支持，Wayland 禁用'],
+  ['电脑', '云电脑 / 隔离 VM', '❌', '无', '✅', 'Boat 云 Linux 桌面 + Local VM'],
+
+  // 连接器
+  ['连接器', '自定义 MCP', '✅', 'stdio / HTTP，界面管理，工具名 mcp__名字__工具', '✅', '零代码自定义 MCP 服务器'],
+  ['连接器', '应用市场', '🟡', '7 个现成 MCP 模板一键接入；没有托管 OAuth 目录', '✅', 'Composio 500+ 应用，OAuth 一次'],
+
+  // 渠道
+  ['渠道', 'Telegram / Slack / Discord', '✅', '三者都接；Slack/Discord 频道里被 @ 才回', '❌', '自家 app 为主，不接第三方 IM'],
+  ['渠道', '微信 / 飞书', '❌', '未做（需资质/风控）', '❌', '未做'],
+  ['渠道', '统一聊天界面', '✅', '桌面窗口 + 托盘', '✅', 'Telegram 风格 app'],
+
+  // 协作
+  ['协作', '群聊', '✅', '应用内建群，@ 指定谁答，共享消息各自上下文', '✅', 'channels：共享指令、响应规则、成员名册'],
+  ['协作', '机器人互派', '✅', 'ask_another_bot，目标用自己的权限/预算做完回报', '✅', '团队 / Chief of Staff / 队友协作'],
+  ['协作', '自动路由（谁该答）', '✅', '规则（中文 n-gram）或模型挑人，失败回落，日志留理由', '✅', 'Jev / 决策模型按消息内容选 bot'],
+
+  // 自动化
+  ['自动化', '定时任务', '✅', '每天/每周/间隔 + 观察模式 + 预算 + 失败暂停', '✅', 'routines：一次/周几/每 5–1440 分钟，跳过重叠'],
+  ['自动化', 'Webhook 触发', '❌', '无', '✅', '本地 8800 端口 + 秘钥 + Bearer'],
+  ['自动化', '应用事件触发', '❌', '无', '✅', 'Composio 应用事件（Gmail 15 分钟轮询等）'],
+
+  // 语音
+  ['语音', 'TTS 朗读', '❌', '无', '✅', 'ElevenLabs / Fish / Grok / Mac 本地'],
+  ['语音', '语音通话 / 听写', '❌', '无', '✅', '通话；mac 本地听写、win/linux 走 Fish STT'],
+
+  // 生成
+  ['生成', '本机生图', '✅', 'Z-Image Turbo / SDXL，约 25 秒', '❌', '未提及'],
+  ['生成', '本机生视频', '✅', 'MiniMax H3：滑窗 90 帧无接缝、首尾帧锚定、多段 chain', '❌', '未提及'],
+  ['生成', '本机生 3D', '✅', 'Hunyuan3D 2.1，图→glb（纯几何无贴图）', '❌', '未提及'],
+  ['生成', '看生成过程', '✅', '右侧内嵌 ComfyUI 队列', '❌', '无'],
+
+  // 开发者
+  ['开发者', '本机 HTTP + SSE', '✅', '约 60 个接口，界面全走它', '✅', 'HTTP 命令 + 单条 SSE 事件流'],
+  ['开发者', '对外 MCP server', '❌', '无', '✅', 'stdio MCP，供 Claude Desktop / Cursor 编排'],
+  ['开发者', 'headless CLI', '❌', '无', '✅', 'openmausbot team apply / run --json'],
+  ['开发者', '类型与测试', '🟡', '纯 JS；自建回归 13 项 + UI/CDP', '✅', 'TypeScript strict；pnpm test 覆盖 unit/driver/API/desktop'],
+];
+
+const rows = document.getElementById('rows');
+const frag = document.createDocumentFragment();
+
+function clsFor(w, o) {
+  const wn = w !== '❌', on = o !== '❌';
+  if (wn && on) return 'row-both';
+  if (wn && !on) return 'row-win';
+  if (!wn && on) return 'row-omb';
+  return '';
+}
+
+let stats = { win: 0, omb: 0, both: 0, none: 0, total: 0 };
+for (const [cat, name, w, wn, o, on] of DATA) {
+  const wnOk = w !== '❌', onOk = o !== '❌';
+  stats.total += 1;
+  if (wnOk && onOk) stats.both += 1;
+  else if (wnOk) stats.win += 1;
+  else if (onOk) stats.omb += 1;
+  else stats.none += 1;
+
+  const tr = document.createElement('tr');
+  tr.className = clsFor(w, o);
+  tr.dataset.kind = wnOk && onOk ? 'both' : wnOk ? 'win' : onOk ? 'omb' : 'none';
+  tr.innerHTML = `
+    <td><div class="cat">${cat}</div><div class="name">${name}</div></td>
+    <td><div class="cell"><div class="mark">${w}</div><div class="note">${wn}</div></div></td>
+    <td><div class="cell"><div class="mark">${o}</div><div class="note">${on}</div></div></td>`;
+  frag.appendChild(tr);
+}
+rows.appendChild(frag);
+
+const winCount = stats.both + stats.win;
+const ombCount = stats.both + stats.omb;
+document.getElementById('winScore').textContent = winCount;
+document.getElementById('ombScore').textContent = ombCount;
+document.getElementById('total').textContent = stats.total;
+document.getElementById('total2').textContent = stats.total;
+document.getElementById('winBar').style.width = `${Math.round((winCount / stats.total) * 100)}%`;
+document.getElementById('ombBar').style.width = `${Math.round((ombCount / stats.total) * 100)}%`;
+
+// 筛选
+const buttons = [...document.querySelectorAll('#controls .btn')];
+for (const b of buttons) {
+  b.addEventListener('click', () => {
+    buttons.forEach((x) => x.classList.toggle('on', x === b));
+    const f = b.dataset.f;
+    for (const tr of rows.children) {
+      const k = tr.dataset.kind;
+      const show = f === 'all' || f === 'diff' ? (f === 'all' || k !== 'both') : k === f;
+      tr.style.display = show ? '' : 'none';
+    }
+  });
+}
+</script>
+</body>
+</html>
+
