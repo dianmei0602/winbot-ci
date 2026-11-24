@@ -1,0 +1,49 @@
+/* ============================================================
+ * winbot Base / Reset + 无障碍基线
+ * ------------------------------------------------------------
+ * 只放全局重置、排版基线与 WCAG 无障碍必备样式。
+ * 组件级样式在 app.css（后续 Phase 4 迁到 components.css / views.css）。
+ * ============================================================ */
+
+* { box-sizing: border-box; }
+
+/* hidden 必须压过下面那些 display:grid / flex 的类，否则空遮罩会一直盖在页面上 */
+[hidden] { display: none !important; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--fg);
+  font: 14px/1.6 "Segoe UI", "Microsoft YaHei UI", "PingFang SC", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+button { font: inherit; color: inherit; cursor: pointer; }
+textarea { font: inherit; color: inherit; }
+input, select { font: inherit; }
+
+/* ---------- 无障碍：全局焦点可见 ---------- */
+:focus-visible {
+  outline: 2px solid var(--c-brand);
+  outline-offset: 2px;
+}
+/* 只在支持 :focus-visible 的浏览器里去掉默认 outline，避免双重描边 */
+:focus:not(:focus-visible) { outline: none; }
+
+/* 屏幕阅读器专用文本 */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* 触摸目标下限（窄屏，WCAG 2.5.5） */
+@media (pointer: coarse) {
+  .icon-btn, .send-btn, .side-nav-item { min-width: 44px; min-height: 44px; }
+}
+

@@ -1,0 +1,12 @@
+node_modules/
+data/
+*.log
+dist/
+
+# 探针/打包测试留下的临时数据
+data-packtest*/
+data-packtest*/
+
+# 托盘 exe 是编译产物，源码可重建（launcher/build.ps1）
+launcher/winbot.exe
+launcher/*.pdb
