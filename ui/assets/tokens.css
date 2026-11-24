@@ -1,0 +1,129 @@
+/* ============================================================
+ * winbot Design Tokens
+ * ------------------------------------------------------------
+ * 设计系统的单一事实来源。所有颜色 / 间距 / 字号 / 圆角 / 层级 /
+ * 动效都在这里定义，业务样式只允许引用 token，不再写魔法数字。
+ *
+ * 兼容策略：保留 v0.6 的全部旧变量名（--bg / --fg / --accent ...）
+ * 作为语义别名，确保 app.css 无需大规模改写即可零视觉回归。
+ * ============================================================ */
+
+:root {
+  /* ---------- 品牌 & 语义色 ---------- */
+  --c-brand: #d7ff00;
+  --c-brand-ink: #161a00;
+  --c-success: #4ade80;
+  --c-warning: #facc15;
+  --c-danger: #f87171;
+  --c-info: #6ea8fe;
+  --c-purple: #c084fc;
+  --c-orange: #fb923c;
+
+  /* ---------- 中性色（深色主题，默认） ---------- */
+  --c-bg: #0f1115;
+  --c-bg-2: #151922;
+  --c-bg-3: #1c2130;
+  --c-line: #262c3a;
+  --c-fg: #e8ecf4;
+  --c-fg-2: #a4adbf;
+  /* A11Y: 原 #6f7889 对比度 3.96:1 不达标，提到 #8a93a6 ≈ 5.6:1（WCAG AA） */
+  --c-fg-3: #8a93a6;
+
+  /* ---------- 间距（4px 基准） ---------- */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+
+  /* ---------- 字号 / 行高 ---------- */
+  --fs-xs: 12px;
+  --fs-sm: 13px;
+  --fs-md: 14px;
+  --fs-lg: 18px;
+  --fs-xl: 24px;
+  --lh-tight: 1.35;
+  --lh-base: 1.6;
+
+  /* ---------- 圆角 ---------- */
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 14px;
+
+  /* ---------- 阴影 / 高度 ---------- */
+  --elev-1: 0 1px 3px rgb(0 0 0 / 0.18);
+  --elev-2: 0 10px 30px rgb(0 0 0 / 0.35);
+
+  /* ---------- 层级（收口 app.css 里的 6/35/40/44/45/50/60） ---------- */
+  --z-base: 0;
+  --z-resizer: 6;       /* 面板拖拽把手 */
+  --z-pane-scrim: 35;   /* 面板遮罩（在 fixed 面板之下） */
+  --z-panel: 40;        /* 窄屏 fixed 面板 */
+  --z-drawer-scrim: 44; /* 侧栏抽屉遮罩 */
+  --z-drawer: 45;       /* 手机侧栏抽屉 */
+  --z-modal: 50;        /* 模态框 */
+  --z-toast: 60;        /* 吐司提示（最高） */
+
+  /* ---------- 动效 ---------- */
+  --t-fast: 140ms ease;
+  --t-base: 240ms ease;
+
+  /* ============================================================
+   * 旧变量名兼容别名 —— app.css / 内联样式继续用这些名字即可
+   * ============================================================ */
+  --bg: var(--c-bg);
+  --bg-2: var(--c-bg-2);
+  --bg-3: var(--c-bg-3);
+  --line: var(--c-line);
+  --fg: var(--c-fg);
+  --fg-2: var(--c-fg-2);
+  --fg-3: var(--c-fg-3);
+  --accent: var(--c-brand);
+  --accent-ink: var(--c-brand-ink);
+  --blue: var(--c-info);
+  --green: var(--c-success);
+  --yellow: var(--c-warning);
+  --red: var(--c-danger);
+  --purple: var(--c-purple);
+  --orange: var(--c-orange);
+  --radius: var(--r-lg);
+  --shadow: var(--elev-2);
+}
+
+/* ============================================================
+ * 浅色主题：bg / fg / line 反色，品牌荧光绿保留但加深 ink 保证对比
+ * 触发方式：在 <html> 上设置 data-theme="light"
+ * 可通过 data-theme 属性或 window.__winbot.setTheme() 切换
+ * ============================================================ */
+[data-theme="light"] {
+  --c-bg: #f4f6fa;
+  --c-bg-2: #ffffff;
+  --c-bg-3: #eef1f7;
+  --c-line: #d9dfe9;
+  --c-fg: #161a22;
+  --c-fg-2: #49536a;
+  --c-fg-3: #5d6880; /* on #fff ≈ 5.6:1, on #f4f6fa ≈ 5.2:1 —— AA */
+  --c-brand: #b8e000;      /* 浅底上荧光绿需压暗一点保对比 */
+  --c-brand-ink: #141a00;
+  --c-success: #15803d;
+  --c-warning: #a16207;
+  --c-danger: #dc2626;
+  --c-info: #1d4ed8;
+  --c-purple: #7e22ce;
+  --c-orange: #c2410c;
+  --elev-1: 0 1px 3px rgb(16 24 40 / 0.10);
+  --elev-2: 0 10px 30px rgb(16 24 40 / 0.16);
+}
+
+/* 尊重系统减少动效偏好 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
