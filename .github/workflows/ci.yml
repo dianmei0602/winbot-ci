@@ -1,0 +1,50 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: 安装依赖
+        run: npm ci --no-audit --no-fund || npm install --no-audit --no-fund
+
+      - name: 快检（6 项：语法/群聊/频道/打包/文档/Codex 离线）
+        run: node test/run-verify.mjs
+        env:
+          CI: 'true'
+
+      - name: 起本地后端
+        run: |
+          nohup node src/main.js > /tmp/winbot.log 2>&1 &
+          for i in $(seq 1 45); do
+            if curl -sf http://127.0.0.1:5178/health > /dev/null; then
+              echo "backend up after ${i}s"
+              break
+            fi
+            sleep 1
+          done
+          curl -sf http://127.0.0.1:5178/health
+
+      - name: 无头回归（更新检查/安装队列/团队包）
+        run: node test/run-verify.mjs --headless
+        env:
+          WINBOT_TOKEN_FILE: ${{ github.workspace }}/data/ui-token
+          WINBOT_DATA_FILE: ${{ github.workspace }}/data
+
+      - name: 失败时打印后端日志
+        if: failure()
+        run: tail -n 120 /tmp/winbot.log
+
+
+
+
