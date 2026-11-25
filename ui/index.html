@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark light" />
+    <title>winbot · 我自己的机器人</title>
+    <link rel="stylesheet" href="/assets/tokens.css" />
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/assets/app.css" />
+    <link rel="icon" href="/assets/favicon.svg" />
+  </head>
+  <body>
+    <div id="app" class="app">
+      <aside class="sidebar" id="sidebar">
+        <div class="side-account">
+          <div class="brand-mark" aria-hidden="true">w</div>
+          <div class="acct-text">
+            <div class="acct-name">winbot <span class="badge">LOCAL</span></div>
+            <div class="acct-sub">本机 · 数据不出门</div>
+          </div>
+          <button class="icon-btn ghost" id="btn-sidebar-collapse" title="收起侧栏" aria-label="收起侧栏">⧉</button>
+        </div>
+
+        <button class="new-chat-btn" id="btn-new-bot">＋ 新会话</button>
+
+        <!-- 5 域主导航：一个功能一个入口，名实相符 -->
+        <nav class="side-nav-list" aria-label="主导航">
+          <button class="side-nav-item" data-domain="chat"><span class="ni" aria-hidden="true">▤</span>对话</button>
+          <button class="side-nav-item" data-domain="bots"><span class="ni" aria-hidden="true">◈</span>机器人</button>
+          <button class="side-nav-item" data-domain="automation"><span class="ni" aria-hidden="true">◷</span>自动化</button>
+          <button class="side-nav-item" data-domain="connect"><span class="ni" aria-hidden="true">⤳</span>连接</button>
+          <button class="side-nav-item" data-domain="system"><span class="ni" aria-hidden="true">⚙</span>系统</button>
+        </nav>
+
+        <div class="side-section-head">
+          <span>机器人</span>
+          <span class="head-actions">
+            <button class="icon-btn tiny ghost" id="btn-bot-search" title="搜索机器人" aria-label="搜索机器人">⌕</button>
+            <button class="icon-btn tiny ghost" id="btn-new-bot-2" title="新建机器人" aria-label="新建机器人">＋</button>
+          </span>
+        </div>
+
+        <div class="side-search" id="side-search-wrap" hidden>
+          <input id="bot-search" type="search" placeholder="搜索机器人…" autocomplete="off" aria-label="搜索机器人" />
+        </div>
+        <div class="side-list" id="bot-list" role="list"></div>
+
+        <div class="side-section-head">
+          <span>群聊</span>
+          <span class="head-actions">
+            <button class="icon-btn tiny ghost" id="btn-new-group" title="建一个群" aria-label="建一个群">＋</button>
+          </span>
+        </div>
+        <div id="group-list" class="group-list" role="list"></div>
+
+        <footer class="side-foot">
+          <div class="side-user">
+            <div class="avatar green" aria-hidden="true">本</div>
+            <div class="side-user-text">
+              <div class="su-name">本机</div>
+              <div class="su-sub" id="side-meta">—</div>
+            </div>
+            <button class="icon-btn ghost" id="btn-theme" title="切换主题" aria-label="切换主题">◐</button>
+            <button class="icon-btn ghost" id="btn-settings" title="系统设置" aria-label="系统设置">⚙</button>
+          </div>
+        </footer>
+      </aside>
+
+      <div class="drawer-scrim" id="drawer-scrim" hidden></div>
+      <div class="pane-scrim" id="pane-scrim"></div>
+
+      <main class="main" id="main">
+        <div class="empty" id="empty-state">
+          <div class="empty-badge">内测版</div>
+          <h1 class="empty-title">探索未至之境</h1>
+          <p class="empty-sub">每个机器人有自己的性格、模型、文件夹和记忆。越出工作区读写，会先问你。</p>
+          <button class="primary lg" id="btn-first-bot">＋ 新建机器人</button>
+          <div class="empty-hints">
+            <span><kbd>/</kbd> 调用指令</span><span><kbd>@</kbd> 选文件或对话</span><span><kbd>Ctrl</kbd>+<kbd>K</kbd> 搜索</span>
+          </div>
+        </div>
+
+        <section class="chat" id="chat" hidden aria-label="对话">
+          <header class="chat-head">
+            <button class="icon-btn" id="btn-sidebar" title="机器人列表" aria-label="打开侧栏">☰</button>
+            <div class="chat-title">
+              <div class="avatar" id="chat-avatar" aria-hidden="true"></div>
+              <div class="chat-title-text">
+                <h2 id="chat-name">—</h2>
+                <div class="chat-sub" id="chat-sub"></div>
+              </div>
+            </div>
+            <div class="chat-actions">
+              <span class="usage-pill" id="usage-pill" title="这段对话累计的 token" hidden>—</span>
+              <button class="icon-btn ghost" id="btn-new-task" title="定时任务" aria-label="定时任务">＋</button>
+              <button class="icon-btn ghost" id="btn-search" title="搜索聊天记录（Ctrl+K）" aria-label="搜索聊天记录">⌕</button>
+              <button class="icon-btn ghost" id="btn-comfy" title="生图/生视频（ComfyUI）" aria-label="生图或生视频">▣</button>
+              <button class="icon-btn ghost" id="btn-new-conv" title="新对话" aria-label="新对话">✎</button>
+              <button class="icon-btn ghost" id="btn-bot-panel" title="机器人设置" aria-label="机器人设置">⚙</button>
+              <button class="icon-btn ghost" id="btn-open-convs" title="历史会话" aria-label="历史会话">☰</button>
+            </div>
+          </header>
+
+          <div class="messages" id="messages" role="log" aria-live="polite" aria-label="消息记录"></div>
+          <div class="attachments" id="attachments" hidden aria-label="待发送附件"></div>
+
+          <div class="composer-wrap">
+            <div class="composer-card">
+              <textarea id="input" rows="1" placeholder="描述你想让它做什么，/ 调用指令，@ 选文件" aria-label="消息输入框"></textarea>
+              <div class="composer-bar">
+                <button class="icon-btn ghost attach-btn" id="btn-attach" title="加图片或文件" aria-label="添加图片或文件">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+                </button>
+                <span class="chip-soft" id="perm-chip" title="这个机器人能做什么">完全权限</span>
+                <select class="model-select soft" id="chat-model" title="切换模型" aria-label="切换模型"></select>
+                <span class="grow"></span>
+                <button class="ghost-btn danger" id="btn-stop" hidden title="停止这一轮" aria-label="停止这一轮">停止</button>
+                <button class="send-btn" id="btn-send" title="发送（Enter）" aria-label="发送消息">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="composer-hint" id="composer-hint"></div>
+          </div>
+        </section>
+      </main>
+
+      <aside class="panel" id="panel" hidden role="dialog" aria-labelledby="panel-title">
+        <div class="pane-resizer" id="pane-resizer" title="拖动调整宽度，双击复位"></div>
+        <header class="panel-head">
+          <h2 id="panel-title">设置</h2>
+          <button class="icon-btn" id="btn-panel-close" title="关闭" aria-label="关闭面板">✕</button>
+        </header>
+        <div class="panel-body" id="panel-body"></div>
+      </aside>
+    </div>
+
+    <div class="modal-wrap" id="modal" hidden>
+      <div class="modal" id="modal-card" role="dialog" aria-modal="true"></div>
+    </div>
+    <div class="toasts" id="toasts" aria-live="polite"></div>
+
+    <script src="/assets/vendor/model-viewer.min.js" defer></script>
+    <script type="module" src="/assets/app.js"></script>
+  </body>
+</html>
+
